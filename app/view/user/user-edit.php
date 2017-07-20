@@ -8,6 +8,7 @@
 </ol>
 
 <form id="frm-User" action="?c=User&a=Save" method="post" enctype="multipart/form-data">
+
     <input type="hidden" name="id" value="<?php echo $alm->id; ?>" />
 
     <div class="form-group">
@@ -35,8 +36,8 @@
         <select class="form-control" id="selRole" name="role">
             <option value="0"></option>
             <?php foreach($roles as $role): ?>
-                <?php ($role->id == $current_role_id) ? $selected = "selected" : $selected = "" ; ?>
-                <option value="<?php echo $role->id; ?>" <?php echo $selected ?> >
+                <?php ($role->role == $current_role_role) ? $selected = "selected" : $selected = "" ; ?>
+                <option value="<?php echo $role->role; ?>" <?php echo $selected ?> >
                   <?php echo $role->role; ?>
                 </option>
             <?php endforeach; ?>

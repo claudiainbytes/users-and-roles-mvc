@@ -1,5 +1,5 @@
 <h1 class="page-header">
-    Role <?php echo $alm->id != null ? '<i>'.$alm->role.'</i>' - Edit Role' : ' - New Register'; ?> 
+    Role <?php echo $alm->id != null ? '<i>'.$alm->role.'</i> - Edit Role' : ' - New Register'; ?>
 </h1>
 
 <ol class="breadcrumb">

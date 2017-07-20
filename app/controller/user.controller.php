@@ -1,4 +1,5 @@
 <?php
+require_once 'app/helpers/gump/gump.class.php';
 require_once 'app/model/user.php';
 require_once 'app/model/role.php';
 require_once 'app/model/users_roles.php';
@@ -13,6 +14,7 @@ class UserController{
         $this->model = new User();
         $this->role = new Role();
         $this->usersRoles = new UsersRoles();
+        $this->gump = new GUMP();
     }
 
     public function Index(){
@@ -27,9 +29,11 @@ class UserController{
 
         $roles = $this->role->getRoles();
 
+        $current_role_role = null;
+
         if(isset($_REQUEST['id'])){
             $alm = $this->model->getUser($_REQUEST['id']);
-            $current_role_id = $this->usersRoles->getRoleByUser($_REQUEST['id']);
+            $current_role_role = $this->usersRoles->getRoleRoleByUser($_REQUEST['id']);
         }
 
         require_once 'app/view/header.php';
@@ -37,42 +41,42 @@ class UserController{
         require_once 'app/view/footer.php';
     }
 
-    public function Sanitize(){
+    public function Validate(){
 
-    /*
-        $_REQUEST['c'] => User
-        $_REQUEST['a'] => Save
-        $_REQUEST['id'] => 37
-        $_REQUEST['name'] => Antonia
-        $_REQUEST['username'] => antonia
-        $_REQUEST['password'] => 666666666666666
-        $_REQUEST['email'] => antonia@gmail.com
-        $_REQUEST['role'] => 0
-      */
-/*
-        if( isset($_REQUEST['email'])  && is_string($_REQUEST['email']) ){
-          if ( strlen( $_REQUEST['email'] ) >= 1 && strlen( $_REQUEST['email'] ) <= 2 ){
-            $email = strip_tags(trim($_REQUEST['email']));
-            echo $email;
-          }else{
-            echo "fallo";
-          }
-
-        }else{
-          echo es vacio y no existe la variable
+        $roles = implode(" ", $this->role->getRolesRol());
+        if($roles !== ""){
+           $roles = "|contains, ".$roles;
         }
 
+        $_POST = $this->gump->sanitize($_POST);
 
-        echo "<pre>".print_r($_REQUEST, true)."</pre>";
-        exit;*/
+        $this->gump->validation_rules(array(
+            'name' => 'required',
+            'username' => 'required|alpha_numeric',
+            'password' => 'required|max_len,6|min_len,6',
+            'email'    => 'required|valid_email',
+            'role' => 'required'.$roles,
+        ));
+
+        $this->gump->filter_rules(array(
+            'name' => 'trim|sanitize_string',
+            'username' => 'trim|sanitize_string',
+            'password' => 'trim',
+            'email'    => 'trim|sanitize_email',
+            'role'     => 'trim'
+        ));
+
+        $validated_data = $this->gump->run($_POST);
+
+        if($validated_data === false) {
+            return $this->gump->get_errors_array();
+        } else {
+            return true;
+        }
 
     }
 
-
-
     public function Save(){
-
-        //$this->Sanitize();
 
         $alm = new User();
 
@@ -81,17 +85,31 @@ class UserController{
         $alm->username = $_REQUEST['username'];
         $alm->password = $_REQUEST['password'];
         $alm->email = $_REQUEST['email'];
-        $alm->role_id = $_REQUEST['role'];
+        $alm->role = $_REQUEST['role'];
 
-        $alm->id > 0
-            ? $this->model->update($alm)
-            : $this->model->addNew($alm);
+        $validation = $this->Validate();
 
-        header('Location: index.php');
+        if( is_bool( $validation ) ){
+
+            $alm->id > 0
+                ? $this->model->update($alm)
+                : $this->model->addNew($alm);
+
+            header('Location: index.php');
+
+        }else{
+
+             require_once 'app/view/header.php';
+             require_once 'app/view/user/user-validation.php';
+             require_once 'app/view/footer.php';
+
+        }
+
     }
 
     public function Delete(){
         $this->model->delete($_REQUEST['id']);
         header('Location: index.php');
     }
+
 }

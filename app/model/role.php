@@ -29,6 +29,34 @@ class Role{
 		}
 	}
 
+	public function getRolesID(){
+		try{
+			$result = array();
+
+			$stm = $this->pdo->prepare("SELECT id FROM roles");
+			$stm->execute();
+
+			return $stm->fetchAll(PDO::FETCH_COLUMN);
+		}
+		catch(Exception $e){
+			die($e->getMessage());
+		}
+	}
+
+	public function getRolesRol(){
+		try{
+			$result = array();
+
+			$stm = $this->pdo->prepare("SELECT role FROM roles");
+			$stm->execute();
+
+			return $stm->fetchAll(PDO::FETCH_COLUMN);
+		}
+		catch(Exception $e){
+			die($e->getMessage());
+		}
+	}
+
 	public function getRole($id){
 		try{
 			$stm = $this->pdo
@@ -36,6 +64,30 @@ class Role{
 
 			$stm->execute(array($id));
 			return $stm->fetch(PDO::FETCH_OBJ);
+		}catch (Exception $e){
+			die($e->getMessage());
+		}
+	}
+
+	public function getRoleByRole($role){
+		try{
+			$stm = $this->pdo
+			          ->prepare("SELECT role FROM roles WHERE id = ?");
+
+			$stm->execute(array($role));
+			return $stm->fetch(PDO::FETCH_COLUMN);
+		}catch (Exception $e){
+			die($e->getMessage());
+		}
+	}
+
+	public function getIdRoleByRole($role){
+		try{
+			$stm = $this->pdo
+			          ->prepare("SELECT id FROM roles WHERE role = ?");
+
+			$stm->execute(array($role));
+			return $stm->fetch(PDO::FETCH_COLUMN);
 		}catch (Exception $e){
 			die($e->getMessage());
 		}

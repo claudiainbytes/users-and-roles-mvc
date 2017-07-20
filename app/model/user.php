@@ -1,21 +1,23 @@
 <?php
+require_once 'app/model/role.php';
 require_once 'app/model/users_roles.php';
 
 class User{
 
-		private $pdo;
-		private $usersRoles;
+	private $pdo;
+	private $usersRoles;
 
-		public $id;
+	public $id;
     public $name;
     public $username;
-		public $password;
-		public $email;
+	public $password;
+	public $email;
     public $register_date;
 
 	public function __CONSTRUCT(){
 		try{
 			$this->pdo = Database::StartUp();
+			$this->role = new Role();
 			$this->usersRoles = new UsersRoles();
 
 		}
@@ -67,6 +69,8 @@ class User{
 	public function update($data){
 		try{
 
+			$data->role_id = $this->role->getIdRoleByRole($data->role);
+
 			$current_rol_id = $this->usersRoles->getRoleByUser($data->id);
 
 			$sql = "UPDATE users SET name = ?, username = ?, password = ?, email = ? WHERE id = ?";
@@ -92,6 +96,8 @@ class User{
 
 	public function addNew(User $data){
 		try{
+
+			$data->role_id = $this->role->getIdRoleByRole($data->role);
 
 			$register_date = time();
 

@@ -2,8 +2,8 @@
 class Permission{
 
 		private $pdo;
-
 		public $id;
+
     public $permission;
 
 	public function __CONSTRUCT(){

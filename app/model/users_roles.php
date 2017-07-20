@@ -1,14 +1,17 @@
 <?php
+require_once 'app/model/role.php';
+
 class UsersRoles{
 
-		private $pdo;
+	private $pdo;
 
     public $user_id;
-		public $role_id;
+	public $role_id;
 
 	public function __CONSTRUCT(){
 		try{
 			$this->pdo = Database::StartUp();
+			$this->role = new Role();
 		}
 		catch(Exception $e){
 			die($e->getMessage());
@@ -41,6 +44,27 @@ class UsersRoles{
 
 			if($userRole){
 				return $userRole->role_id;
+			}else{
+				return 0;
+			}
+
+		}
+		catch(Exception $e){
+			die($e->getMessage());
+		}
+	}
+
+	public function getRoleRoleByUser($user_id){
+		try{
+
+			$result = array();
+			$stm = $this->pdo->prepare("SELECT role_id FROM users_roles WHERE user_id = ?");
+			$stm->execute(array($user_id));
+
+			$userRoleId = $stm->fetch(PDO::FETCH_COLUMN);
+
+			if($userRoleId){
+				return $this->role->getRoleByRole($userRoleId);
 			}else{
 				return 0;
 			}
