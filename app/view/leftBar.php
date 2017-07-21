@@ -19,28 +19,19 @@
     </div>
   </div>
 </nav>
-
 <div class="container-fluid">
   <div class="row">
     <!-- Left NavBar -->
     <div class="col-sm-3 col-md-2 sidebar">
       <ul class="nav nav-sidebar">
-        <li class="active"><a href="index.php?c=user">Users <span class="sr-only">(current)</span></a></li>
-        <li><a href="index.php?c=role">Roles</a></li>
-        <li><a href="index.php?c=permission">Permissions</a></li>
+        <?php
+          $c = (isset($_GET["c"]) && $_GET['c'] !== '') ? $_GET["c"] : "User";
+          foreach($navLinks as $link){
+             $linkActive = ($c == $link['controller']) ? "active" : "";
+             echo '<li class="'.$linkActive.'"><a href="'.$link['href'].'">'.$link['name'].'</a></li>';
+          }
+        ?>
       </ul>
-      <!--ul class="nav nav-sidebar">
-        <li><a href="">Nav item</a></li>
-        <li><a href="">Nav item again</a></li>
-        <li><a href="">One more nav</a></li>
-        <li><a href="">Another nav item</a></li>
-        <li><a href="">More navigation</a></li>
-      </ul>
-      <ul class="nav nav-sidebar">
-        <li><a href="">Nav item again</a></li>
-        <li><a href="">One more nav</a></li>
-        <li><a href="">Another nav item</a></li>
-      </ul-->
     </div>
     <!-- Left NavBar -->
     <!-- Container Right -->

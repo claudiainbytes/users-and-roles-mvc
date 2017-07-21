@@ -1,4 +1,5 @@
 <?php
+require_once 'app/helpers/gump/gump.class.php';
 require_once 'app/model/role.php';
 require_once 'app/model/permission.php';
 require_once 'app/model/role_permissions.php';
@@ -8,11 +9,13 @@ class RoleController{
     private $model;
     private $permissions;
     private $rolePermissions;
+    private $gump;
 
     public function __CONSTRUCT(){
         $this->model = new Role();
         $this->permissions = new Permission();
         $this->rolePermissions = new RolePermissions();
+        $this->gump = new GUMP();
     }
 
     public function Index(){
@@ -71,17 +74,52 @@ class RoleController{
 
     }
 
+    public function Validate(){
+
+        $_POST = $this->gump->sanitize($_POST);
+
+        $this->gump->validation_rules(array(
+            'role' => 'required'
+        ));
+
+        $this->gump->filter_rules(array(
+            'role' => 'trim|sanitize_string'
+        ));
+
+        $validated_data = $this->gump->run($_POST);
+
+        if($validated_data === false) {
+            return $this->gump->get_errors_array();
+        } else {
+            return true;
+        }
+
+    }
+
     public function Save(){
         $alm = new Role();
 
         $alm->id = $_REQUEST['id'];
         $alm->role = $_REQUEST['role'];
 
-        $alm->id > 0
-            ? $this->model->update($alm)
-            : $this->model->addNew($alm);
+        $validation = $this->Validate();
 
-        $this->Index();
+        if( is_bool( $validation ) ){
+
+            $alm->id > 0
+                ? $this->model->update($alm)
+                : $this->model->addNew($alm);
+
+            $this->Index();
+
+         }else{
+
+             require_once 'app/view/header.php';
+             require_once 'app/view/role/role-validation.php';
+             require_once 'app/view/footer.php';
+
+        }
+
     }
 
     public function Delete(){

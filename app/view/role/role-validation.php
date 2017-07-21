@@ -1,12 +1,11 @@
 <h1 class="page-header">
-    User <?php echo $alm->id != null ? '<i>'.$alm->name.'</i> - Edit User' : ' - New Register '; ?>
+    Role <?php echo $alm->id != null ? '<i>'.$alm->role.'</i> - Edit Role' : ' - New Register'; ?>
 </h1>
 
 <ol class="breadcrumb">
-  <li><a href="?c=User">Users</a></li>
-  <li class="active"><?php echo $alm->id != null ? $alm->name : 'New Register'; ?></li>
+  <li><a href="?c=Role">Roles</a></li>
+  <li class="active"><?php echo $alm->id != null ? $alm->role : 'New Register'; ?></li>
 </ol>
-
 
 <div class="alert alert-danger" role="alert">
   <h3 class="alert-heading">Warning!</h3>
@@ -21,4 +20,4 @@
   </ul>
 </div>
 
-<a href="?c=User" class="btn btn-primary" role="button">Continue</a>
+<a href="?c=Role" class="btn btn-primary" role="button">Continue</a>

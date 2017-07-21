@@ -1,13 +1,11 @@
 <?php
-/**
-* Basic information about PDO Statement
-* http://php.net/manual/es/class.pdostatement.php
-*/
+require_once('app/settings.php');
+
 class Database
 {
     public static function StartUp()
     {
-        $pdo = new PDO('mysql:host=localhost;dbname=usersandroles;charset=utf8', 'root', '');
+        $pdo = new PDO('mysql:host='.HOST.';dbname='.DATABASE.';charset=utf8', USER, PASSWORD);
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         return $pdo;
     }

@@ -14,4 +14,5 @@
 
 	</head>
     <body>
-			<?php require 'leftBar.php'; ?>
+<?php require 'app/routes.php'; ?>
+<?php require 'leftBar.php'; ?>

@@ -9,6 +9,7 @@ class UserController{
     private $model;
     private $role;
     private $usersRoles;
+    private $gump;
 
     public function __CONSTRUCT(){
         $this->model = new User();

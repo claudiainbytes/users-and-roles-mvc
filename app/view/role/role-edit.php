@@ -19,6 +19,7 @@
 
     <div class="text-right">
         <button class="btn btn-success">Save</button>
+        <a href="?c=Role" class="btn btn-primary" role="button">Cancel</a>
     </div>
 </form>
 
